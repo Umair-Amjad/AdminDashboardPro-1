@@ -41,6 +41,9 @@ interface Institute {
 interface InstituteTableProps {
   institutes?: Institute[];
   isLoading?: boolean;
+  onEdit?: (institute: Institute) => void;
+  onDelete?: (institute: Institute) => void;
+  onSettings?: (institute: Institute) => void;
 }
 
 // Sample data for the institutes
@@ -122,7 +125,13 @@ const statusMap: Record<string, { color: string; label: string }> = {
   maintenance: { color: "bg-yellow-100 text-yellow-800", label: "Maintenance" },
 };
 
-const InstituteTable = ({ institutes = sampleInstitutes, isLoading = false }: InstituteTableProps) => {
+const InstituteTable = ({ 
+  institutes = sampleInstitutes, 
+  isLoading = false,
+  onEdit = () => {},
+  onDelete = () => {},
+  onSettings = () => {}
+}: InstituteTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const totalItems = institutes.length;
@@ -220,13 +229,28 @@ const InstituteTable = ({ institutes = sampleInstitutes, isLoading = false }: In
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">
-                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary-dark">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-primary hover:text-primary-dark"
+                        onClick={() => onEdit(institute)}
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-800">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-gray-600 hover:text-gray-800"
+                        onClick={() => onSettings(institute)}
+                      >
                         <Settings className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-800">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => onDelete(institute)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

@@ -6,9 +6,17 @@ import PageHeader from "@/components/shared/PageHeader";
 import InstituteTable from "@/components/institutes/InstituteTable";
 import InstituteFilters from "@/components/institutes/InstituteFilters";
 import AddInstituteDialog from "@/components/institutes/AddInstituteDialog";
+import EditInstituteDialog from "@/components/institutes/EditInstituteDialog";
+import DeleteInstituteDialog from "@/components/institutes/DeleteInstituteDialog";
+import { useToast } from "@/hooks/use-toast";
+import { Institute } from "@shared/schema";
 
 const Institutes = () => {
+  const { toast } = useToast();
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedInstitute, setSelectedInstitute] = useState<Institute | null>(null);
   const [filters, setFilters] = useState({
     status: "all",
     type: "all",
@@ -18,6 +26,26 @@ const Institutes = () => {
   const { data: institutes, isLoading } = useQuery({
     queryKey: ["/api/institutes", filters],
   });
+
+  // Handle edit button click
+  const handleEdit = (institute: Institute) => {
+    setSelectedInstitute(institute);
+    setShowEditDialog(true);
+  };
+
+  // Handle delete button click
+  const handleDelete = (institute: Institute) => {
+    setSelectedInstitute(institute);
+    setShowDeleteDialog(true);
+  };
+
+  // Handle settings button click
+  const handleSettings = (institute: Institute) => {
+    toast({
+      title: "Settings",
+      description: `Configure settings for ${institute.name}`,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -33,9 +61,37 @@ const Institutes = () => {
 
       <InstituteFilters filters={filters} setFilters={setFilters} />
 
-      <InstituteTable institutes={institutes} isLoading={isLoading} />
+      <InstituteTable 
+        institutes={institutes} 
+        isLoading={isLoading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onSettings={handleSettings}
+      />
 
-      <AddInstituteDialog open={showAddDialog} onOpenChange={setShowAddDialog} />
+      {/* Add Institute Dialog */}
+      <AddInstituteDialog 
+        open={showAddDialog} 
+        onOpenChange={setShowAddDialog} 
+      />
+
+      {/* Edit Institute Dialog */}
+      {selectedInstitute && (
+        <EditInstituteDialog 
+          open={showEditDialog} 
+          onOpenChange={setShowEditDialog} 
+          institute={selectedInstitute} 
+        />
+      )}
+
+      {/* Delete Institute Dialog */}
+      {selectedInstitute && (
+        <DeleteInstituteDialog 
+          open={showDeleteDialog} 
+          onOpenChange={setShowDeleteDialog} 
+          institute={selectedInstitute} 
+        />
+      )}
     </div>
   );
 };
