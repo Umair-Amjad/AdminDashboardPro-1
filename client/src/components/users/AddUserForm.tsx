@@ -209,12 +209,14 @@ const AddUserForm = ({ onBack }: AddUserFormProps) => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">None</SelectItem>
-                          {institutes?.map((institute: any) => (
+                          <SelectItem value="0">None</SelectItem>
+                          {institutes && Array.isArray(institutes) ? institutes.map((institute: any) => (
                             <SelectItem key={institute.id} value={institute.id.toString()}>
                               {institute.name}
                             </SelectItem>
-                          ))}
+                          )) : (
+                            <SelectItem value="loading">Loading institutes...</SelectItem>
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />

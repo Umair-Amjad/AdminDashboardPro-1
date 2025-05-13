@@ -28,7 +28,7 @@ const Institutes = () => {
 
   const { data: institutes, isLoading } = useQuery({
     queryKey: ["/api/institutes", filters],
-  });
+  }) as { data: Institute[] | undefined, isLoading: boolean };
 
   // Handle edit button click
   const handleEdit = (institute: Institute) => {

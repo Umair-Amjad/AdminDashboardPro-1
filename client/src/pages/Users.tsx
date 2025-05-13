@@ -50,7 +50,7 @@ const Users = () => {
   // Fetch users and institutes
   const { data: users, isLoading } = useQuery({
     queryKey: ["/api/users", activeTab, roleFilter, instituteFilter, searchQuery],
-  });
+  }) as { data: User[] | undefined, isLoading: boolean };
   
   // Toggle user active status
   const toggleActiveMutation = useMutation({
