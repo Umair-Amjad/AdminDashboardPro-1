@@ -30,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import UserTable from "@/components/users/UserTable";
 import AddUserForm from "@/components/users/AddUserForm";
+import EditUserForm from "@/components/users/EditUserForm";
 import { User } from "@shared/schema";
 
 const Users = () => {
@@ -193,26 +194,12 @@ const Users = () => {
         <AddUserForm onBack={() => setShowAddUserForm(false)} />
       )}
 
-      {/* Edit User Dialog */}
-      {selectedUser && (
-        <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-          <DialogContent className="sm:max-w-[525px]">
-            <DialogHeader>
-              <DialogTitle>Edit User</DialogTitle>
-              <DialogDescription>
-                Update user information
-              </DialogDescription>
-            </DialogHeader>
-            
-            {/* Edit user form would go here */}
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowEditDialog(false)}>
-                Cancel
-              </Button>
-              <Button>Save Changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+      {/* Edit User Form */}
+      {showEditDialog && selectedUser && (
+        <EditUserForm 
+          user={selectedUser} 
+          onBack={() => setShowEditDialog(false)} 
+        />
       )}
 
       {/* Delete User Dialog */}

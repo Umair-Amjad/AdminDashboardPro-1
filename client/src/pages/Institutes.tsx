@@ -51,6 +51,16 @@ const Institutes = () => {
     setShowSettingsDialog(true);
   };
 
+  // Handle selecting an institute for access
+  const handleInstituteSelect = (institute: Institute) => {
+    toast({
+      title: "Institute Access",
+      description: `Switched to ${institute.name}`,
+    });
+    // Here you would implement the actual institute switching logic
+    // such as setting the active institute in context/state
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -58,9 +68,17 @@ const Institutes = () => {
           title="Institute Management"
           description="Manage all institutes under your organization."
         />
-        <Button onClick={() => setShowAddDialog(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Add Institute
-        </Button>
+        <div className="flex space-x-2">
+          <Button 
+            variant="outline" 
+            onClick={() => setShowAccessDialog(true)}
+          >
+            <School className="mr-2 h-4 w-4" /> Access Institute
+          </Button>
+          <Button onClick={() => setShowAddDialog(true)}>
+            <Plus className="mr-2 h-4 w-4" /> Add Institute
+          </Button>
+        </div>
       </div>
 
       <InstituteFilters filters={filters} setFilters={setFilters} />
@@ -96,6 +114,22 @@ const Institutes = () => {
           institute={selectedInstitute} 
         />
       )}
+
+      {/* Settings Dialog */}
+      {selectedInstitute && (
+        <InstituteSettingsDialog
+          open={showSettingsDialog}
+          onOpenChange={setShowSettingsDialog}
+          institute={selectedInstitute}
+        />
+      )}
+
+      {/* Institute Access Dialog */}
+      <InstituteAccessDialog
+        open={showAccessDialog}
+        onOpenChange={setShowAccessDialog}
+        onInstituteSelect={handleInstituteSelect}
+      />
     </div>
   );
 };
