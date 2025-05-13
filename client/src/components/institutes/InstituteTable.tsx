@@ -211,7 +211,7 @@ const InstituteTable = ({ institutes = sampleInstitutes, isLoading = false }: In
                     <div className="text-sm text-gray-900">{institute.admin}</div>
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">
-                    {institute.students.toLocaleString()}
+                    {institute.students ? institute.students.toLocaleString() : '0'}
                   </TableCell>
                   <TableCell>
                     <Badge className={cn("text-xs", statusMap[institute.status].color)}>

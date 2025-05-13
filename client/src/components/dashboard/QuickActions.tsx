@@ -51,17 +51,15 @@ const QuickActions = () => {
         <ul className="space-y-3">
           {actions.map((action) => (
             <li key={action.id}>
-              <Link href={action.href}>
-                <a className="flex items-center p-3 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-150">
-                  <div className={`flex-shrink-0 h-10 w-10 rounded-full ${action.bgColor} flex items-center justify-center`}>
-                    <div className={action.textColor}>{action.icon}</div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-900">{action.title}</p>
-                    <p className="text-xs text-gray-500">{action.description}</p>
-                  </div>
-                </a>
-              </Link>
+              <div className="flex items-center p-3 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-150 cursor-pointer" onClick={() => window.location.href = action.href}>
+                <div className={`flex-shrink-0 h-10 w-10 rounded-full ${action.bgColor} flex items-center justify-center`}>
+                  <div className={action.textColor}>{action.icon}</div>
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-900">{action.title}</p>
+                  <p className="text-xs text-gray-500">{action.description}</p>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
