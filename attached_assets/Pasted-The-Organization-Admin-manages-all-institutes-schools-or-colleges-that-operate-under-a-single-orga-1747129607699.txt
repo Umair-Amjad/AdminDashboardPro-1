@@ -1,0 +1,106 @@
+The Organization Admin manages all institutes (schools or colleges) that operate under a single organization (e.g., a school network like “Orbit Group of Schools”).
+
+They are responsible for onboarding, configuring, and supervising all institutes under their organization while delegating day-to-day operations to Institute Admins.
+
+✅ Key Responsibilities & Features
+1. 🏫 Institute Management
+Add/Edit/Delete Institutes
+
+Assign/Remove Institute Admins
+
+Activate/Deactivate institutes
+
+View performance and analytics for each institute
+
+2. 👥 User Management
+Create and manage Institute Admin accounts
+
+View all staff and student accounts across institutes
+
+Assign roles like teacher, accountant, librarian (bulk and individual)
+
+Suspend/Reactivate users across any institute
+
+3. 📊 Reports & Analytics
+View summary reports across institutes:
+
+Student enrollment
+
+Attendance rates
+
+Fee collection overview
+
+Exam performance breakdown
+
+4. 📩 Communication
+Send platform-wide announcements to multiple institutes
+
+Manage templates for SMS/Email/Push communications
+
+View communication logs
+
+5. 🔒 Access Control & Permissions
+Set role-based permissions per institute
+
+Define institute-level feature access:
+
+Turn on/off modules (e.g., exams, library, transport)
+
+Restrict access to fee management or grade settings
+
+6. 🎓 Academic Configuration (Master Settings)
+Define academic year templates
+
+Define class-grade structure (e.g., Grade 1–12, Semester 1–8)
+
+Create subject templates reusable across institutes
+
+Set common grading rules or allow custom grading at institute level
+
+⚙️ Settings Page: What the Organization Admin Can Configure
+🔧 Organization Settings
+Organization name, logo, colors
+
+Default language, timezone
+
+Contact and support details
+
+🧠 Institute Feature Access
+Toggle which features are available to each institute:
+
+Enable/Disable modules like Transport, Library, Events
+
+Allow/Restrict editing rights for certain modules (e.g., Fee or Exam)
+
+📅 Academic Settings
+Create academic year presets
+
+Define term/semester structure
+
+Add exam types and weightage
+
+Subject catalog and optional subjects
+
+💸 Finance Controls (Optional)
+Set default fee types (tuition, transport, etc.)
+
+Define payment gateways allowed (per institute)
+
+Enable/disable discount and fine configuration rights for institutes
+
+🔐 Security & User Policy
+Password policy for all users under the org
+
+Two-factor authentication toggle
+
+Institute-specific IP restrictions or login limits
+
+📣 Communication Preferences
+Set communication limits per institute (e.g., max SMS/day)
+
+Manage default email templates for institutes
+
+✨ Bonus (Optional for MVP)
+Multi-theme branding per institute
+
+Role-based dashboard metrics customization
