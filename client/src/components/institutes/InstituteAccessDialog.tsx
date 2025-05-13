@@ -111,7 +111,7 @@ const InstituteAccessDialog = ({ open, onOpenChange, onInstituteSelect }: Instit
   // Fetch institutes
   const { data: institutes, isLoading } = useQuery({
     queryKey: ["/api/institutes"],
-  });
+  }) as { data: Institute[] | undefined, isLoading: boolean };
   
   const handleInstituteSelect = (institute: Institute) => {
     toast({
@@ -125,11 +125,13 @@ const InstituteAccessDialog = ({ open, onOpenChange, onInstituteSelect }: Instit
   const displayInstitutes = institutes || sampleInstitutes;
   
   // Filter institutes by search query
-  const filteredInstitutes = displayInstitutes.filter((institute) => 
-    institute.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    institute.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    institute.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredInstitutes = Array.isArray(displayInstitutes) 
+    ? displayInstitutes.filter((institute: Institute) => 
+        institute.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        institute.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        institute.type.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
