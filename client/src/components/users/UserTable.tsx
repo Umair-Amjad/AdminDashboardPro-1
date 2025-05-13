@@ -20,132 +20,134 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Settings, Trash2 } from "lucide-react";
+import { Edit, Trash2, UserCog } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { User } from "@shared/schema";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Switch } from "@/components/ui/switch";
 
-import { Institute } from "@shared/schema";
-
-interface InstituteTableProps {
-  institutes?: Institute[];
+interface UserTableProps {
+  users?: User[];
   isLoading?: boolean;
-  onEdit?: (institute: Institute) => void;
-  onDelete?: (institute: Institute) => void;
-  onSettings?: (institute: Institute) => void;
+  onEdit?: (user: User) => void;
+  onDelete?: (user: User) => void;
+  onToggleActive?: (user: User, active: boolean) => void;
 }
 
-// Sample data for the institutes
-const sampleInstitutes: Institute[] = [
+// Sample data for the users
+const sampleUsers: User[] = [
   {
     id: 1,
-    name: "Stellar Academy",
-    email: "stellar@orbitgroup.edu",
-    type: "School",
-    typeDetail: "K-12",
-    adminId: 1,
-    studentCount: 1245,
-    status: "active",
-    logoInitials: "SA",
-    logoColor: "blue",
+    username: "john.carter",
+    password: "hashed-password", // In real apps, you wouldn't include this field in responses
+    name: "John Carter",
+    email: "john.carter@orbitgroup.edu",
+    role: "admin",
+    instituteId: null,
+    active: true,
   },
   {
     id: 2,
-    name: "Heritage School",
-    email: "heritage@orbitgroup.edu",
-    type: "School",
-    typeDetail: "K-12",
-    adminId: 2,
-    studentCount: 980,
-    status: "active",
-    logoInitials: "HS",
-    logoColor: "purple",
+    username: "emily.wilson",
+    password: "hashed-password",
+    name: "Emily Wilson",
+    email: "emily.wilson@orbitgroup.edu",
+    role: "instituteAdmin",
+    instituteId: 2,
+    active: true,
   },
   {
     id: 3,
-    name: "Meridian School",
-    email: "meridian@orbitgroup.edu",
-    type: "School",
-    typeDetail: "K-12",
-    adminId: 3,
-    studentCount: 876,
-    status: "active",
-    logoInitials: "MS",
-    logoColor: "amber",
+    username: "robert.lee",
+    password: "hashed-password",
+    name: "Robert Lee",
+    email: "robert.lee@orbitgroup.edu",
+    role: "instituteAdmin",
+    instituteId: 3,
+    active: false,
   },
   {
     id: 4,
-    name: "Phoenix University",
-    email: "phoenix@orbitgroup.edu",
-    type: "University",
-    typeDetail: "Higher Education",
-    adminId: 4,
-    studentCount: 2352,
-    status: "maintenance",
-    logoInitials: "PU",
-    logoColor: "red",
-  },
-  {
-    id: 5,
-    name: "Global College",
-    email: "global@orbitgroup.edu",
-    type: "College",
-    typeDetail: "Higher Education",
-    adminId: 5,
-    studentCount: 1654,
-    status: "inactive",
-    logoInitials: "GC",
-    logoColor: "gray",
+    username: "sarah.mitchell",
+    password: "hashed-password",
+    name: "Sarah Mitchell",
+    email: "sarah.mitchell@orbitgroup.edu",
+    role: "teacher",
+    instituteId: 5,
+    active: true,
   },
 ];
 
-const colorMap: Record<string, string> = {
-  blue: "bg-blue-100 text-blue-800",
-  purple: "bg-purple-100 text-purple-800",
-  amber: "bg-amber-100 text-amber-800",
-  red: "bg-red-100 text-red-800",
-  gray: "bg-gray-100 text-gray-800",
-  green: "bg-green-100 text-green-800",
-};
-
-const statusMap: Record<string, { color: string; label: string }> = {
-  active: { color: "bg-green-100 text-green-800", label: "Active" },
-  inactive: { color: "bg-red-100 text-red-800", label: "Inactive" },
-  maintenance: { color: "bg-yellow-100 text-yellow-800", label: "Maintenance" },
-};
-
-const InstituteTable = ({ 
-  institutes = sampleInstitutes, 
+const UserTable = ({ 
+  users = sampleUsers, 
   isLoading = false,
   onEdit = () => {},
   onDelete = () => {},
-  onSettings = () => {}
-}: InstituteTableProps) => {
+  onToggleActive = () => {},
+}: UserTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const totalItems = institutes.length;
+  const totalItems = users.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-
+  
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
+  
   const getCurrentItems = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return institutes.slice(startIndex, endIndex);
+    return users.slice(startIndex, endIndex);
   };
-
+  
+  const getRoleColor = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "bg-purple-100 text-purple-800";
+      case "instituteAdmin":
+        return "bg-blue-100 text-blue-800";
+      case "teacher":
+        return "bg-green-100 text-green-800";
+      case "accountant":
+        return "bg-amber-100 text-amber-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+  
+  const getRoleBadgeLabel = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "Admin";
+      case "instituteAdmin":
+        return "Institute Admin";
+      case "teacher":
+        return "Teacher";
+      case "accountant":
+        return "Accountant";
+      default:
+        return "User";
+    }
+  };
+  
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  };
+  
   return (
     <Card className="shadow overflow-hidden">
       <CardContent className="p-0">
         <Table>
           <TableHeader className="bg-gray-50">
             <TableRow>
-              <TableHead className="w-[300px]">Institute</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Admin</TableHead>
-              <TableHead>Students</TableHead>
+              <TableHead className="w-[300px]">User</TableHead>
+              <TableHead>Role</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -166,21 +168,13 @@ const InstituteTable = ({
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Skeleton className="h-4 w-16 mb-1" />
-                      <Skeleton className="h-3 w-12" />
+                      <Skeleton className="h-6 w-24 rounded-full" />
                     </TableCell>
                     <TableCell>
-                      <Skeleton className="h-4 w-24" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-4 w-12" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-6 w-16 rounded-full" />
+                      <Skeleton className="h-6 w-12" />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <Skeleton className="h-8 w-8 rounded-full" />
                         <Skeleton className="h-8 w-8 rounded-full" />
                         <Skeleton className="h-8 w-8 rounded-full" />
                       </div>
@@ -188,33 +182,43 @@ const InstituteTable = ({
                   </TableRow>
                 ))
             ) : (
-              getCurrentItems().map((institute) => (
-                <TableRow key={institute.id}>
+              getCurrentItems().map((user) => (
+                <TableRow key={user.id}>
                   <TableCell>
                     <div className="flex items-center">
-                      <div className={cn("flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center", colorMap[institute.logoColor])}>
-                        <span className="text-sm font-medium">{institute.logoInitials}</span>
-                      </div>
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback className="bg-primary text-primary-foreground">
+                          {getInitials(user.name)}
+                        </AvatarFallback>
+                      </Avatar>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{institute.name}</div>
-                        <div className="text-xs text-gray-500">{institute.email}</div>
+                        <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                        <div className="text-xs text-gray-500">
+                          {user.email} <span className="mx-1">•</span> @{user.username}
+                        </div>
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm text-gray-900">{institute.type}</div>
-                    <div className="text-xs text-gray-500">{institute.typeDetail}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm text-gray-900">{institute.adminId ? `Admin ID: ${institute.adminId}` : 'No admin assigned'}</div>
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-500">
-                    {institute.studentCount ? institute.studentCount.toLocaleString() : '0'}
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={cn("text-xs", statusMap[institute.status].color)}>
-                      {statusMap[institute.status].label}
+                    <Badge className={cn("text-xs", getRoleColor(user.role))}>
+                      {getRoleBadgeLabel(user.role)}
                     </Badge>
+                    {user.instituteId && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Institute ID: {user.instituteId}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        checked={user.active} 
+                        onCheckedChange={(checked) => onToggleActive(user, checked)}
+                      />
+                      <span className={user.active ? "text-green-600 text-sm" : "text-red-600 text-sm"}>
+                        {user.active ? "Active" : "Inactive"}
+                      </span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">
@@ -222,23 +226,15 @@ const InstituteTable = ({
                         variant="ghost" 
                         size="sm" 
                         className="text-primary hover:text-primary-dark"
-                        onClick={() => onEdit(institute)}
+                        onClick={() => onEdit(user)}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="text-gray-600 hover:text-gray-800"
-                        onClick={() => onSettings(institute)}
-                      >
-                        <Settings className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
                         className="text-red-600 hover:text-red-800"
-                        onClick={() => onDelete(institute)}
+                        onClick={() => onDelete(user)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -249,7 +245,7 @@ const InstituteTable = ({
             )}
           </TableBody>
         </Table>
-
+        
         {/* Pagination */}
         <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
           <div className="flex items-center justify-between">
@@ -259,7 +255,7 @@ const InstituteTable = ({
                 <span className="font-medium">
                   {Math.min(currentPage * itemsPerPage, totalItems)}
                 </span>{" "}
-                of <span className="font-medium">{totalItems}</span> institutes
+                of <span className="font-medium">{totalItems}</span> users
               </p>
             </div>
             <Pagination>
@@ -289,4 +285,4 @@ const InstituteTable = ({
   );
 };
 
-export default InstituteTable;
+export default UserTable;

@@ -47,6 +47,9 @@ const formSchema = z.object({
     .min(1, { message: "Logo initials are required." })
     .max(3, { message: "Maximum 3 characters allowed." }),
   logoColor: z.string().min(1, { message: "Please select a logo color." }),
+  status: z.string().min(1, { message: "Please select a status." }),
+  admin: z.string().min(2, { message: "Admin name is required." }),
+  students: z.number().int().min(0).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -65,6 +68,9 @@ const AddInstituteDialog = ({ open, onOpenChange }: AddInstituteDialogProps) => 
       typeDetail: "",
       logoInitials: "",
       logoColor: "blue",
+      status: "active",
+      admin: "",
+      students: 0,
     },
   });
 
@@ -119,7 +125,7 @@ const AddInstituteDialog = ({ open, onOpenChange }: AddInstituteDialogProps) => 
         <DialogHeader>
           <DialogTitle>Add New Institute</DialogTitle>
           <DialogDescription>
-            Add a new school or college to your organization. Fill in the required details below.
+            Add a new institute to your organization. Fill in the required fields below.
           </DialogDescription>
         </DialogHeader>
 
@@ -167,7 +173,7 @@ const AddInstituteDialog = ({ open, onOpenChange }: AddInstituteDialogProps) => 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select type" />
@@ -199,7 +205,7 @@ const AddInstituteDialog = ({ open, onOpenChange }: AddInstituteDialogProps) => 
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="logoInitials"
@@ -225,7 +231,7 @@ const AddInstituteDialog = ({ open, onOpenChange }: AddInstituteDialogProps) => 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Logo Color</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select color" />
@@ -244,7 +250,63 @@ const AddInstituteDialog = ({ open, onOpenChange }: AddInstituteDialogProps) => 
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
+                        <SelectItem value="maintenance">Maintenance</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+
+            <FormField
+              control={form.control}
+              name="admin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Admin Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. John Smith" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="students"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Initial Students (optional)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      placeholder="e.g. 0" 
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <DialogFooter className="pt-4">
               <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
