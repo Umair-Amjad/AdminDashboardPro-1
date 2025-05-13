@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
+import { Plus, School } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/shared/PageHeader";
 import InstituteTable from "@/components/institutes/InstituteTable";
@@ -8,6 +8,8 @@ import InstituteFilters from "@/components/institutes/InstituteFilters";
 import AddInstituteDialog from "@/components/institutes/AddInstituteDialog";
 import EditInstituteDialog from "@/components/institutes/EditInstituteDialog";
 import DeleteInstituteDialog from "@/components/institutes/DeleteInstituteDialog";
+import InstituteSettingsDialog from "@/components/institutes/InstituteSettingsDialog";
+import InstituteAccessDialog from "@/components/institutes/InstituteAccessDialog";
 import { useToast } from "@/hooks/use-toast";
 import { Institute } from "@shared/schema";
 
@@ -16,6 +18,7 @@ const Institutes = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showAccessDialog, setShowAccessDialog] = useState(false);
   const [selectedInstitute, setSelectedInstitute] = useState<Institute | null>(null);
   const [filters, setFilters] = useState({
     status: "all",
@@ -39,12 +42,13 @@ const Institutes = () => {
     setShowDeleteDialog(true);
   };
 
+  // For institute settings
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+
   // Handle settings button click
   const handleSettings = (institute: Institute) => {
-    toast({
-      title: "Settings",
-      description: `Configure settings for ${institute.name}`,
-    });
+    setSelectedInstitute(institute);
+    setShowSettingsDialog(true);
   };
 
   return (
