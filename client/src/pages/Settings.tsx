@@ -62,6 +62,15 @@ const Settings = () => {
       loginAttempts: 5,
       sessionTimeout: 30,
       ipRestriction: false,
+    },
+    apiKeys: {
+      sendgrid: "",
+      twilioSid: "",
+      twilioToken: "",
+      twilioPhone: "",
+      attendanceBiometric: "",
+      googleMaps: "",
+      paymentGateway: "",
     }
   };
   
@@ -118,6 +127,17 @@ const Settings = () => {
     }));
   };
 
+  // Handle API key changes
+  const handleApiKeyChange = (key: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      apiKeys: {
+        ...prev.apiKeys,
+        [key]: value
+      }
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -126,10 +146,11 @@ const Settings = () => {
       />
 
       <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="features">Features</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="apikeys">API Keys</TabsTrigger>
         </TabsList>
         
         {/* General Settings Tab */}
@@ -401,6 +422,152 @@ const Settings = () => {
           </Card>
         </TabsContent>
         
+        {/* API Keys Tab */}
+        <TabsContent value="apikeys">
+          <Card>
+            <CardHeader>
+              <CardTitle>API Integrations</CardTitle>
+              <CardDescription>
+                Configure API keys for external services that will be used across all institutes
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Email Configuration */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Email Configuration</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="sendgrid">SendGrid API Key</Label>
+                    <Input
+                      id="sendgrid"
+                      type="password"
+                      value={formData.apiKeys.sendgrid}
+                      onChange={(e) => handleApiKeyChange('sendgrid', e.target.value)}
+                      className="font-mono"
+                      placeholder="SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Used for sending emails to users, parents, and staff
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* SMS Configuration */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">SMS Configuration</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="twilioSid">Twilio Account SID</Label>
+                    <Input
+                      id="twilioSid"
+                      type="password"
+                      value={formData.apiKeys.twilioSid}
+                      onChange={(e) => handleApiKeyChange('twilioSid', e.target.value)}
+                      className="font-mono"
+                      placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="twilioToken">Twilio Auth Token</Label>
+                    <Input
+                      id="twilioToken"
+                      type="password"
+                      value={formData.apiKeys.twilioToken}
+                      onChange={(e) => handleApiKeyChange('twilioToken', e.target.value)}
+                      className="font-mono"
+                      placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="twilioPhone">Twilio Phone Number</Label>
+                    <Input
+                      id="twilioPhone"
+                      value={formData.apiKeys.twilioPhone}
+                      onChange={(e) => handleApiKeyChange('twilioPhone', e.target.value)}
+                      placeholder="+1234567890"
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Used for sending SMS alerts and notifications
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Attendance Biometric API */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Attendance System Integration</h3>
+                <div className="space-y-2">
+                  <Label htmlFor="attendanceBiometric">Biometric API Key</Label>
+                  <Input
+                    id="attendanceBiometric"
+                    type="password"
+                    value={formData.apiKeys.attendanceBiometric}
+                    onChange={(e) => handleApiKeyChange('attendanceBiometric', e.target.value)}
+                    className="font-mono"
+                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Used to connect with biometric attendance devices and sync with the system
+                  </p>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Maps Configuration */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Maps Integration</h3>
+                <div className="space-y-2">
+                  <Label htmlFor="googleMaps">Google Maps API Key</Label>
+                  <Input
+                    id="googleMaps"
+                    type="password"
+                    value={formData.apiKeys.googleMaps}
+                    onChange={(e) => handleApiKeyChange('googleMaps', e.target.value)}
+                    className="font-mono"
+                    placeholder="AIza..."
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Used for transportation routes, campus maps, and location features
+                  </p>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Payment Gateway */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Payment Processing</h3>
+                <div className="space-y-2">
+                  <Label htmlFor="paymentGateway">Payment Gateway API Key</Label>
+                  <Input
+                    id="paymentGateway"
+                    type="password"
+                    value={formData.apiKeys.paymentGateway}
+                    onChange={(e) => handleApiKeyChange('paymentGateway', e.target.value)}
+                    className="font-mono"
+                    placeholder="sk_test_..."
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Used for processing fee payments and financial transactions
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-end">
+              <Button onClick={handleSubmit}>
+                <Save className="mr-2 h-4 w-4" />
+                Save API Keys
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+
         {/* Security Tab */}
         <TabsContent value="security">
           <Card>
